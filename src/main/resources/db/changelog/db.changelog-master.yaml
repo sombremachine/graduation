@@ -1,0 +1,385 @@
+databaseChangeLog:
+
+  # includeAll do nothing when run from jar or maven int tests. See also: https://liquibase.jira.com/browse/CORE-2863
+
+#  - include: { relativeToChangelogFile: true, file: 001_table.sql }
+#  - include: { relativeToChangelogFile: false, file: ./001_table.sql }
+
+
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: marceloverdijk
+      changes:
+        - createSequence:
+            catalogName: seq
+            cycle: false
+            incrementBy: 1
+            ordered: true
+            schemaName: public
+            sequenceName: seq_id
+            startValue: 1000
+        - createTable:
+            tableName: users1
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  defaultValueSequenceNext: seq_id
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: password
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: user_roles
+            columns:
+              - column:
+                  name: user_id
+                  type: int
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_user_account
+                    references: users1(id)
+              - column:
+                  name: role
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: restaurants
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  defaultValueSequenceNext: seq_id
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: votes
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  defaultValueSequenceNext: seq_id
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: int
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_user_vote_account
+                    references: users1(id)
+              - column:
+                  name: restaurant_id
+                  type: int
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_restaurant_account
+                    references: restaurants(id)
+              - column:
+                  name: date_time
+                  type: datetime
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: menu_items
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  defaultValueSequenceNext: seq_id
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: price
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: restaurant_id
+                  type: int
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_restaurant_menu_account
+                    references: restaurants(id)
+              - column:
+                  name: date_time
+                  type: datetime
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: 2
+      author: marceloverdijk
+      changes:
+        - insert:
+            tableName: users1
+            columns:
+              - column:
+                  name: id
+                  value: 100
+              - column:
+                  name: name
+                  value: Admin
+              - column:
+                  name: email
+                  value: admin@gmail.com
+              - column:
+                  name: password
+                  value: '{noop}admin'
+        - insert:
+            tableName: users1
+            columns:
+              - column:
+                  name: id
+                  value: 101
+              - column:
+                  name: name
+                  value: Root
+              - column:
+                  name: email
+                  value: root@gmail.com
+              - column:
+                  name: password
+                  value: '{noop}root'
+        - insert:
+            tableName: users1
+            columns:
+              - column:
+                  name: id
+                  value: 102
+              - column:
+                  name: name
+                  value: User
+              - column:
+                  name: email
+                  value: user@yandex.ru
+              - column:
+                  name: password
+                  value: '{noop}password'
+        - insert:
+            tableName: users1
+            columns:
+              - column:
+                  name: id
+                  value: 103
+              - column:
+                  name: name
+                  value: User3
+              - column:
+                  name: email
+                  value: user3@yandex.ru
+              - column:
+                  name: password
+                  value: '{noop}password3'
+        - insert:
+            tableName: user_roles
+            columns:
+              - column:
+                  name: user_id
+                  value: 100
+              - column:
+                  name: role
+                  value: ROLE_USER
+        - insert:
+            tableName: user_roles
+            columns:
+              - column:
+                  name: user_id
+                  value: 100
+              - column:
+                  name: role
+                  value: ROLE_ADMIN
+        - insert:
+            tableName: user_roles
+            columns:
+              - column:
+                  name: user_id
+                  value: 101
+              - column:
+                  name: role
+                  value: ROLE_USER
+        - insert:
+            tableName: user_roles
+            columns:
+              - column:
+                  name: user_id
+                  value: 101
+              - column:
+                  name: role
+                  value: ROLE_ROOT
+        - insert:
+            tableName: user_roles
+            columns:
+              - column:
+                  name: user_id
+                  value: 102
+              - column:
+                  name: role
+                  value: ROLE_USER
+        - insert:
+            tableName: user_roles
+            columns:
+              - column:
+                  name: user_id
+                  value: 103
+              - column:
+                  name: role
+                  value: ROLE_USER
+        - insert:
+            tableName: restaurants
+            columns:
+              - column:
+                  name: id
+                  value: 104
+              - column:
+                  name: name
+                  value: restr_1
+        - insert:
+            tableName: restaurants
+            columns:
+              - column:
+                  name: id
+                  value: 105
+              - column:
+                  name: name
+                  value: restr_2
+        - insert:
+            tableName: restaurants
+            columns:
+              - column:
+                  name: id
+                  value: 106
+              - column:
+                  name: name
+                  value: restr_3
+        - insert:
+            tableName: menu_items
+            columns:
+              - column:
+                  name: id
+                  value: 107
+              - column:
+                  name: name
+                  value: menu_item_today_0
+              - column:
+                  name: price
+                  value: 100
+              - column:
+                  name: restaurant_id
+                  value: 105
+        - insert:
+            tableName: menu_items
+            columns:
+              - column:
+                  name: id
+                  value: 108
+              - column:
+                  name: name
+                  value: menu_item_today_1
+              - column:
+                  name: price
+                  value: 20
+              - column:
+                  name: restaurant_id
+                  value: 105
+        - insert:
+            tableName: menu_items
+            columns:
+              - column:
+                  name: id
+                  value: 109
+              - column:
+                  name: name
+                  value: menu_item_yestarday_0
+              - column:
+                  name: price
+                  value: 101
+              - column:
+                  name: restaurant_id
+                  value: 105
+              - column:
+                  name: date_time
+                  valueDate: '2019-01-07T15:39:24.0'
+        - insert:
+            tableName: votes
+            columns:
+              - column:
+                  name: id
+                  value: 110
+              - column:
+                  name: name
+                  value: vote0
+              - column:
+                  name: user_id
+                  value: 100
+              - column:
+                  name: restaurant_id
+                  value: 105
+        - insert:
+            tableName: votes
+            columns:
+              - column:
+                  name: id
+                  value: 111
+              - column:
+                  name: name
+                  value: vote1
+              - column:
+                  name: user_id
+                  value: 101
+              - column:
+                  name: restaurant_id
+                  value: 105
+        - insert:
+            tableName: votes
+            columns:
+              - column:
+                  name: id
+                  value: 112
+              - column:
+                  name: name
+                  value: vote1
+              - column:
+                  name: user_id
+                  value: 101
+              - column:
+                  name: restaurant_id
+                  value: 105
+              - column:
+                  name: date_time
+                  valueDate: '2019-01-07T15:39:24.0'
